@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:simple_tooltip/simple_tooltip.dart';
 
 class ObfuscateTooltipItem extends StatefulWidget {
@@ -116,6 +115,7 @@ class _PositionAndSize {
   final BuildContext context;
   final Size size;
   final Offset globalPosition;
+
   _PositionAndSize({
     required this.context,
     required this.size,

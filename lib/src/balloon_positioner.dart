@@ -64,7 +64,6 @@ class __BallonPositionerState extends State<_BallonPositioner> {
 
   @override
   Widget build(BuildContext _) {
-
     RenderBox renderBox = widget.context.findRenderObject() as RenderBox;
     if (!renderBox.attached) {
       return Container();
@@ -81,7 +80,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
 
     late Offset tipTarget;
 
-    final Offset zeroOffset = Offset.zero;
+    const Offset zeroOffset = Offset.zero;
     try {
       if (widget.tooltipDirection == TooltipDirection.up) {
         tipTarget = renderBox.size.topCenter(zeroOffset);
@@ -119,7 +118,8 @@ class __BallonPositionerState extends State<_BallonPositioner> {
         outsidePadding: widget.outsidePadding,
       ),
       child: Stack(
-        clipBehavior: Clip.none, fit: StackFit.passthrough,
+        clipBehavior: Clip.none,
+        fit: StackFit.passthrough,
         children: <Widget>[
           Positioned(
             child: Container(
@@ -160,7 +160,8 @@ class __BallonPositionerState extends State<_BallonPositioner> {
           showWhenUnlinked: false,
           offset: tipTarget.translate(offset.dx, offset.dy), //
           child: Stack(
-            clipBehavior: Clip.none, fit: StackFit.loose,
+            clipBehavior: Clip.none,
+            fit: StackFit.loose,
             children: <Widget>[
               Positioned(
                 child: Transform.translate(
@@ -195,28 +196,31 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     final double halfW = childSize.width / 2;
     Offset centerPosition = Offset(-halfW, -halfH);
     // final xMin = outsidePadding + halfW;
-    if (widget.tooltipDirection == TooltipDirection.up) {
-      final double yOffset = -halfH - widget.arrowLength - widget.arrowTipDistance;
+
+    if ([TooltipDirection.up, TooltipDirection.down].contains(widget.tooltipDirection)) {
+      final double yOffset;
+      if (widget.tooltipDirection == TooltipDirection.up) {
+        yOffset = -halfH - widget.arrowLength - widget.arrowTipDistance;
+      } else {
+        yOffset = halfH + widget.arrowLength + widget.arrowTipDistance;
+      }
       ballonOffset = centerPosition.translate(0, yOffset);
       final maxXOffset = overlay.size.width;
       final globalBalloonRightBoundingOffset = globalTipTarget.dx + ballonOffset.dx + childSize.width;
+      const minXOffset = 0;
+      final globalBalloonLeftBoundingOffset = globalTipTarget.dx + ballonOffset.dx;
       if (globalBalloonRightBoundingOffset > maxXOffset) {
         ballonOffset = ballonOffset.translate(
-          maxXOffset - globalBalloonRightBoundingOffset - widget.outsidePadding,
+          maxXOffset - globalBalloonRightBoundingOffset - (widget.outsidePadding / 2),
           0,
         );
       }
-      final minXOffset = 0;
-      final globalBalloonLeftBoundingOffset = globalTipTarget.dx + ballonOffset.dx;
       if (globalBalloonLeftBoundingOffset < minXOffset) {
         ballonOffset = ballonOffset.translate(
-          minXOffset - globalBalloonLeftBoundingOffset + widget.outsidePadding,
+          minXOffset - globalBalloonLeftBoundingOffset + (widget.outsidePadding / 2),
           0,
         );
       }
-    } else if (widget.tooltipDirection == TooltipDirection.down) {
-      final double yOffset = halfH + widget.arrowLength + widget.arrowTipDistance;
-      ballonOffset = centerPosition.translate(0, yOffset);
     } else if (widget.tooltipDirection == TooltipDirection.right) {
       final double xOffset = halfW + widget.arrowLength + widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(xOffset, 0);
@@ -231,7 +235,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     } else if (widget.tooltipDirection == TooltipDirection.left) {
       final double xOffset = -halfW - widget.arrowLength - widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(xOffset, 0);
-      final minXOffset = 0;
+      const minXOffset = 0;
       final globalBalloonLeftBoundingOffset = globalTipTarget.dx + ballonOffset.dx;
       if (globalBalloonLeftBoundingOffset < minXOffset) {
         ballonOffset = ballonOffset.translate(

@@ -25,7 +25,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
         child: SizedBox(
           child: Column(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text("toggle: $_show"),
                 onPressed: () {
                   setState(() {
@@ -33,7 +33,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text("change direction"),
                 onPressed: () {
                   setState(() {
@@ -55,7 +55,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("hideOnTap: $hideOnTap"),
                 onPressed: () {
                   setState(() {
@@ -63,7 +63,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("change border: $hideOnTap"),
                 onPressed: () {
                   setState(() {
@@ -92,7 +92,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   routeObserver: MyApp.of(context).routeObserver,
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text("New route"),
                 onPressed: () {
                   Navigator.of(context).push(

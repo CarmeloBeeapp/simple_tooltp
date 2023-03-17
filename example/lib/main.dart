@@ -1,7 +1,7 @@
 import 'package:example/basics_example_page.dart';
-
 import 'package:example/obfuscate_example_page.dart';
 import 'package:flutter/material.dart';
+
 import 'animated_example_page.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -73,7 +73,7 @@ class OptionsPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: const Text("Animated example"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -81,7 +81,7 @@ class OptionsPage extends StatelessWidget {
                   ));
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text("Basics"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -89,7 +89,7 @@ class OptionsPage extends StatelessWidget {
                   ));
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text("Obfuscate"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(

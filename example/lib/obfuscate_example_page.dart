@@ -26,7 +26,7 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
         child: SizedBox(
           child: Column(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text("toogle: $_show"),
                 onPressed: () {
                   setState(() {
@@ -34,7 +34,7 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text("change direction"),
                 onPressed: () {
                   setState(() {
@@ -56,7 +56,7 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: const Text("Show Dialog"),
                 onPressed: () {
                   showGeneralDialog(

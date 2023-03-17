@@ -122,7 +122,7 @@ class SimpleTooltip extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 460),
     this.backgroundColor = const Color(0xFFFFFFFF),
     this.customShadows = const [
-      const BoxShadow(color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),
+      BoxShadow(color: Color(0x45222222), blurRadius: 8, spreadRadius: 2),
     ],
     this.tooltipTap,
     this.hideOnTooltipTap = false,
@@ -142,7 +142,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   // To avoid rebuild state of widget for each rebuild
   GlobalKey _transitionKey = GlobalKey();
-  GlobalKey _positionerKey = GlobalKey();
+  final GlobalKey _positionerKey = GlobalKey();
 
   bool _routeIsShowing = true;
 
@@ -150,7 +150,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   late OverlayEntry _overlayEntry;
 
-  List<ObfuscateTooltipItemState> _obfuscateItems = [];
+  final List<ObfuscateTooltipItemState> _obfuscateItems = [];
   _BallonSize? _ballonSize;
 
   addObfuscateItem(ObfuscateTooltipItemState item) {
@@ -228,7 +228,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     _overlayEntry = _buildOverlay(
       buildHidding: buildHidding,
     );
-    Overlay.of(context, rootOverlay: false)!.insert(_overlayEntry);
+    Overlay.of(context, rootOverlay: false).insert(_overlayEntry);
     _displaying = true;
   }
 
@@ -236,7 +236,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     if (!_displaying) {
       return;
     }
-    this._overlayEntry.remove();
+    _overlayEntry.remove();
     _displaying = false;
   }
 
@@ -273,12 +273,17 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   OverlayEntry _buildOverlay({
     bool buildHidding = false,
   }) {
+    final RenderBox? renderBox = (widget.child.key as GlobalKey?)?.currentContext?.findRenderObject() as RenderBox?;
+
+    final Size size = renderBox?.size ?? Size(1, 1); // or _widgetKey.currentContext?.size
+
+    final Offset offset = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
     var direction = widget.tooltipDirection;
 
     if (direction == TooltipDirection.horizontal || direction == TooltipDirection.vertical) {
       // compute real direction based on target position
       final targetRenderBox = context.findRenderObject() as RenderBox;
-      final overlayRenderBox = Overlay.of(context, rootOverlay: false)!.context.findRenderObject() as RenderBox?;
+      final overlayRenderBox = Overlay.of(context, rootOverlay: false).context.findRenderObject() as RenderBox?;
 
       final targetGlobalCenter =
           targetRenderBox.localToGlobal(targetRenderBox.size.center(Offset.zero), ancestor: overlayRenderBox);
@@ -302,11 +307,21 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
           minHeight: widget.minHeight,
           maxWidth: widget.maxWidth,
           minWidth: widget.minWidth,
+          // arrowBaseWidth: widget.arrowBaseWidth,
+          arrowLength: widget.arrowLength,
+          arrowTipDistance: widget.arrowTipDistance,
+          outsidePadding: widget.minimumOutSidePadding,
+          context: context,
           child: _BalloonTransition(
             key: _transitionKey,
             duration: widget.animationDuration,
             tooltipDirection: direction,
             hide: buildHidding,
+            animationStart: (status) {
+              if (status == AnimationStatus.reverse) {
+                _removeTooltip();
+              }
+            },
             animationEnd: (status) {
               if (status == AnimationStatus.dismissed) {
                 _removeTooltip();
@@ -325,6 +340,8 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
               tooltipDirection: direction,
               backgroundColor: widget.backgroundColor,
               shadows: widget.customShadows,
+              rootSize: size,
+              rootOffset: offset,
               onTap: () {
                 if (widget.hideOnTooltipTap) {
                   _removeTooltip();
@@ -342,11 +359,6 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
               },
             ),
           ),
-          // arrowBaseWidth: widget.arrowBaseWidth,
-          arrowLength: widget.arrowLength,
-          arrowTipDistance: widget.arrowTipDistance,
-          outsidePadding: widget.minimumOutSidePadding,
-          context: context,
         );
       },
     );
